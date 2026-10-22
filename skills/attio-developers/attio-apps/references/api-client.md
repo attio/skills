@@ -72,15 +72,17 @@ export async function getWidget(
 
 ## Time limits, pagination and retries
 
-Server functions stop after 30 seconds. The docs give no limit for block handlers, webhooks or
-events, so treat them the same way.
+Server functions stop after 30 seconds. Treat block handlers, webhooks and events the same way.
 
-- Give paginated loops a wall-clock budget well under the limit (e.g. 10 seconds). When you pass
-  it, stop and return what you have with a flag saying the list is incomplete, and log it.
+- Give paginated loops a wall-clock budget under the limit (e.g. 20 seconds). When you pass it,
+  stop, log it, and return what you have with a flag saying the list is incomplete. Request the
+  most relevant results first (e.g. most recently updated), so a cut-off list keeps them.
 - Limit fan-out to a few concurrent requests, and stop early on a rate limit.
 - A short in-request retry on `429` is fine: respect `Retry-After`, cap the wait, and stay well
-  under 30 seconds in total. In a workflow step, do not loop: return a `retryable` error and let
-  Attio retry. For slow vendor jobs, use a deferred step, not polling.
+  under 30 seconds in total.
+- In a workflow step, do not loop or wait out a rate limit. Waiting burns the step's time limit,
+  and a retry gets a fresh one: return a `retryable` error and let Attio retry. For slow vendor
+  jobs, use a deferred step, not polling.
 
 ## Idempotency
 

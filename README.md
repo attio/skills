@@ -33,6 +33,5 @@ Attio App SDK app. Before changing any code, load the `attio-apps` skill. If it 
 installed, run `npx skills add attio/skills --skill attio-apps -y`, then read its `SKILL.md`.
 ```
 
-Keep `CLAUDE.md` as `@AGENTS.md`. Put knowledge about one app in the app itself: gotchas in
-comments next to the code, and the external service and app-wide constraints in its README or
-`docs/`.
+Put knowledge about one app in the app itself: gotchas in comments next to the code, and the 
+external service and app-wide constraints in its README or `docs/`.

@@ -36,7 +36,7 @@ created.
 blocked.
 
 - Tear down what `connection-added` created (vendor webhooks, handlers, `kv` entries), but
-  **never throw**, even though the docs' example does. The vendor may already have revoked the
+  **never throw**. The vendor may already have revoked the
   token or deleted the resource, so log each failure and carry on.
 
 ## Webhook handlers
