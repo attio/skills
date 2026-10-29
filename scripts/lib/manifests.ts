@@ -60,7 +60,7 @@ function openaiManifest(config: Config, plugin: PluginConfig) {
       positive: openai.review.positive.map((c) => ({
         description: c.description,
         prompt: c.prompt,
-        tools_triggered: c.toolsTriggered.join(" "),
+        tools_triggered: c.toolsTriggered.join(", "),
         expected_behavior: c.expectedBehavior,
       })),
       negative: openai.review.negative.map((c) => ({ description: c.description, prompt: c.prompt })),
