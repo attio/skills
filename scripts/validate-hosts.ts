@@ -1,5 +1,5 @@
-// Installs the plugins with the Claude Code and Codex CLIs, using a throwaway home folder for each,
-// and checks that both clients load every skill and MCP server.
+// Installs the plugins in temporary Claude Code and Codex config directories,
+// then checks that both clients load every skill and MCP server.
 //
 //   pnpm validate:hosts [--require]
 //
@@ -52,8 +52,7 @@ function step(name: string, fn: () => void): void {
 }
 
 /**
- * A copy of the marketplace whose entries point at the plugin folders in this checkout,
- * because the committed entries install from GitHub.
+ * Copies the marketplace and points its entries at local plugins so the checks use this checkout.
  */
 async function localMarketplace(work: string, file: string): Promise<string> {
   const dir = join(work, "marketplace");
@@ -65,7 +64,7 @@ async function localMarketplace(work: string, file: string): Promise<string> {
   return dir;
 }
 
-/** Repo skills missing from a client's output, which names each skill as `<plugin>:<skill>` or by skill name. */
+/** Finds skills missing from the client's output, using qualified names when required. */
 function missingSkills(output: string, plugin: string, qualified: boolean): string[] {
   return skills
     .filter((s) => s.plugin === plugin)
@@ -122,7 +121,8 @@ async function codex(): Promise<void> {
         const out = JSON.parse(run("codex", ["plugin", "add", `${plugin.name}@${marketplace}`, "--json"], env)) as {
           version?: string;
         };
-        if (out.version !== config.version) throw new Error(`installed version ${out.version}, expected ${config.version}`);
+        if (out.version !== config.version)
+          throw new Error(`installed version ${out.version}, expected ${config.version}`);
       });
     }
     // Codex drops an MCP server with an invalid entry instead of failing the install, so check the list.
@@ -139,7 +139,7 @@ async function codex(): Promise<void> {
         }
       }
     });
-    // The skills list Codex puts in the model's prompt, as `- <plugin>:<skill>: <description>`.
+    // Codex lists skills in the model's prompt as `- <plugin>:<skill>: <description>`.
     step("codex loads every skill", () => {
       const prompt = run("codex", ["debug", "prompt-input"], env);
       const missing = config.plugins.flatMap((p) => missingSkills(prompt, p.name, true));
