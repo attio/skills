@@ -45,6 +45,7 @@ asks. The assistant can only see and change what your Attio permissions allow.
 
 ```text
 plugins/<plugin>/skills/<skill>/SKILL.md   skills, one folder each
+plugins/<plugin>/README.md                 plugin overview
 ```
 
 Each plugin folder also holds manifests for every supported client.
