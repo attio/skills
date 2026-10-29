@@ -5,7 +5,7 @@ import { defineConfig } from "./scripts/lib/config.ts";
 const keywords = ["attio", "crm", "sales", "pipeline", "deals", "accounts", "meetings", "email", "revops", "customer-success"];
 
 export default defineConfig({
-  version: "0.0.0",
+  version: "0.1.0",
   repository: "attio/skills",
   author: { name: "Attio", url: "https://attio.com" },
   links: {
@@ -50,7 +50,7 @@ export default defineConfig({
       termsOfService: "https://attio.com/legal/attio-developer-terms",
       openai: {
         shortDescription: "Build Attio apps",
-        longDescription: "Build, debug and review Attio apps built with the Attio App SDK.",
+        longDescription: "Build, debug and review Attio apps and integrations with the App SDK, REST API and MCP.",
       },
     },
   ],
