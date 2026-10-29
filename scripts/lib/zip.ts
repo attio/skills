@@ -45,7 +45,8 @@ export async function collectUploadFiles(pluginDir: string): Promise<ZipFile[]> 
   }
 
   if (!files.some((f) => f.path === "plugin.json")) throw new Error("plugin.json is missing; run `pnpm generate`");
-  if (!files.some((f) => /^skills\/[^/]+\/SKILL\.md$/.test(f.path))) throw new Error("the upload needs at least one skill");
+  if (!files.some((f) => /^skills\/[^/]+\/SKILL\.md$/.test(f.path)))
+    throw new Error("the upload needs at least one skill");
   if (files.length > MAX_ENTRIES) throw new Error(`${files.length} files; the upload allows ${MAX_ENTRIES}`);
   let total = 0;
   for (const file of files) {
