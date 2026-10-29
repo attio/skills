@@ -55,7 +55,7 @@ asks. The assistant can only see and change what your Attio permissions allow.
 
 ## Updates
 
-The marketplace points at the latest release of each plugin. Until the first release, it installs from `main`.
+The marketplace installs from `main`, and every change to a plugin comes with a new version.
 
 - **Claude Code:** run `claude plugin update <plugin>@attio` in a terminal, or turn on auto-update for the
   `attio` marketplace in `/plugin` under Marketplaces. Run `/reload-plugins` to load the new version.
@@ -72,3 +72,6 @@ scripts/                                   generator, checks and the release bui
 
 Each plugin folder also holds manifests for every supported client. They're generated from
 `plugin.config.ts`, so don't edit them by hand.
+
+A pull request that changes a plugin also raises `version` in `plugin.config.ts`, and CI checks it. Merging it to
+`main` releases that version as a GitHub release tagged `v<version>`.

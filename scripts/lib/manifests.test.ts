@@ -1,27 +1,23 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { parseConfig } from "./config.ts";
 import { testConfig } from "./fixtures.ts";
-import { buildOutputs, renderSections, type Published } from "./manifests.ts";
+import { buildOutputs, renderSections } from "./manifests.ts";
 
-const PUBLISHED: Published = { tag: "v1.2.0", commit: "0123456789abcdef0123456789abcdef01234567" };
-
-function outputs(published: Published | null = PUBLISHED) {
-  return buildOutputs(
-    parseConfig({ ...testConfig(), published: "1.2.0" }),
-    [
-      {
-        plugin: "crm",
-        name: "setup",
-        frontmatter: { description: "Does the thing. Use when the user asks for the thing." },
-      },
-      {
-        plugin: "crm-dev",
-        name: "build-apps",
-        frontmatter: { description: "Builds CRM apps." },
-      },
-    ],
-    `# Plugins
+const out = buildOutputs(
+  testConfig(),
+  [
+    {
+      plugin: "crm",
+      name: "setup",
+      frontmatter: { description: "Does the thing. Use when the user asks for the thing." },
+    },
+    {
+      plugin: "crm-dev",
+      name: "build-apps",
+      frontmatter: { description: "Builds CRM apps." },
+    },
+  ],
+  `# Plugins
 
 <!-- BEGIN GENERATED: plugins -->
 <!-- END GENERATED: plugins -->
@@ -32,37 +28,17 @@ function outputs(published: Published | null = PUBLISHED) {
 <!-- BEGIN GENERATED: install -->
 <!-- END GENERATED: install -->
 `,
-    published ?? undefined,
-  );
-}
+);
 
-const out = outputs();
-
-function read(path: string, source = out): Record<string, any> {
-  const content = source.get(path);
+function read(path: string): Record<string, any> {
+  const content = out.get(path);
   assert.ok(content, `Missing generated file: ${path}`);
   return JSON.parse(content);
 }
 
 describe("buildOutputs", () => {
-  it("pins every marketplace entry to the published tag and its commit", () => {
-    for (const path of [".agents/plugins/marketplace.json", ".claude-plugin/marketplace.json"]) {
-      for (const entry of read(path)["plugins"]) {
-        assert.deepEqual(entry.source, {
-          source: "git-subdir",
-          url: "https://github.com/example/plugins.git",
-          path: `plugins/${entry.name}`,
-          ref: "v1.2.0",
-          sha: PUBLISHED.commit,
-        });
-      }
-    }
-    // The plugins themselves carry the version on main.
-    assert.equal(read("plugins/crm/plugin.json")["version"], "1.2.3");
-  });
-
-  it("installs from the default branch before the first release", () => {
-    const entry = read(".claude-plugin/marketplace.json", outputs(null))["plugins"][0];
+  it("installs each plugin from its folder in the repo", () => {
+    const entry = read(".claude-plugin/marketplace.json")["plugins"][0];
     assert.deepEqual(entry.source, {
       source: "git-subdir",
       url: "https://github.com/example/plugins.git",
@@ -121,11 +97,5 @@ describe("renderSections", () => {
 
   it("fails without markers", () => {
     assert.throws(() => renderSections("text", { x: "new" }, "R.md"), /R\.md needs/);
-  });
-});
-
-describe("config", () => {
-  it("rejects a published version later than the version on main", () => {
-    assert.throws(() => parseConfig({ ...testConfig(), published: "2.0.0" }), /can't be later than `version`/);
   });
 });
