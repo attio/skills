@@ -14,9 +14,19 @@ concurrency:
 
 jobs:
   checks:
-    name: Checks
+    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Typecheck
+            command: typecheck
+          - name: Tests
+            command: test
+          - name: Generated files are up to date
+            command: generate --check
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -27,10 +37,9 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm test
-      - name: Generated files are up to date
-        run: pnpm generate --check
+      - run: pnpm $COMMAND
+        env:
+          COMMAND: ${{ matrix.command }}
 
   hosts:
     name: Install in Claude Code and Codex
