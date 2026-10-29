@@ -53,6 +53,14 @@ codex plugin add attio-dev@attio
 The `attio` plugin connects to the Attio MCP server. Sign in with your Attio account when your client
 asks. The assistant can only see and change what your Attio permissions allow.
 
+## Updates
+
+The marketplace points at the latest release of each plugin. Until the first release, it installs from `main`.
+
+- **Claude Code:** run `claude plugin update <plugin>@attio` in a terminal, or turn on auto-update for the
+  `attio` marketplace in `/plugin` under Marketplaces. Run `/reload-plugins` to load the new version.
+- **Codex:** checks for updates when it starts. Run `codex plugin marketplace upgrade attio` to check now.
+
 ## Repository layout
 
 ```text

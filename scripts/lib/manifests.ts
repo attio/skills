@@ -26,12 +26,23 @@ function claudeCategory(plugin: PluginConfig): string {
   return plugin.category === "Developer Tools" ? "development" : plugin.category.toLowerCase().replace(/\W+/g, "-");
 }
 
-/** Each plugin installs from its folder in this repo. */
-function gitSource(plugin: PluginConfig, url: string) {
+/** The published release, as its tag and the commit the tag points at. */
+export interface Published {
+  tag: string;
+  commit: string;
+}
+
+/**
+ * Each plugin installs from its folder at the published release. Pinning the commit as well as the tag
+ * means a moved tag, or a branch with the same name, can't change what users install.
+ */
+function gitSource(plugin: PluginConfig, url: string, published: Published | undefined) {
   return {
     source: "git-subdir",
     url,
     path: `plugins/${plugin.name}`,
+    ref: published?.tag,
+    sha: published?.commit,
   };
 }
 
@@ -121,7 +132,7 @@ function claudeMcpConfig(plugin: PluginConfig) {
   return { mcpServers: servers };
 }
 
-function codexMarketplace(config: Config) {
+function codexMarketplace(config: Config, published: Published | undefined) {
   return {
     name: config.marketplace.name,
     interface: { displayName: config.marketplace.displayName },
@@ -131,7 +142,7 @@ function codexMarketplace(config: Config) {
       description: plugin.description,
       interface: { displayName: plugin.displayName },
       category: plugin.category,
-      source: gitSource(plugin, `${repositoryUrl(config)}.git`),
+      source: gitSource(plugin, `${repositoryUrl(config)}.git`, published),
       policy: {
         installation: "AVAILABLE",
         authentication: hasMcp(plugin) ? "ON_INSTALL" : "ON_USE",
@@ -140,7 +151,7 @@ function codexMarketplace(config: Config) {
   };
 }
 
-function claudeMarketplace(config: Config) {
+function claudeMarketplace(config: Config, published: Published | undefined) {
   return {
     name: config.marketplace.name,
     owner: { name: config.author.name, url: config.author.url },
@@ -156,7 +167,7 @@ function claudeMarketplace(config: Config) {
       license: config.license,
       category: claudeCategory(plugin),
       keywords: plugin.keywords,
-      source: gitSource(plugin, `${repositoryUrl(config)}.git`),
+      source: gitSource(plugin, `${repositoryUrl(config)}.git`, published),
     })),
   };
 }
@@ -208,9 +219,15 @@ export function renderSections(current: string, sections: Record<string, string>
 
 /**
  * Every generated file, keyed by repo-relative path. `readme` is the current README text, because only its
- * marked sections are generated.
+ * marked sections are generated. `published` is the release the marketplaces point at, or undefined before
+ * the first release.
  */
-export function buildOutputs(config: Config, skills: readonly Skill[], readme: string): Map<string, string> {
+export function buildOutputs(
+  config: Config,
+  skills: readonly Skill[],
+  readme: string,
+  published: Published | undefined,
+): Map<string, string> {
   const outputs = new Map<string, string>();
   for (const plugin of config.plugins) {
     const dir = `plugins/${plugin.name}`;
@@ -223,7 +240,7 @@ export function buildOutputs(config: Config, skills: readonly Skill[], readme: s
   }
   const sections = { plugins: pluginsTable(config), skills: skillsTable(skills), install: installBlock(config) };
   outputs.set(ROOT_README, renderSections(readme, sections, ROOT_README));
-  outputs.set(".agents/plugins/marketplace.json", json(codexMarketplace(config)));
-  outputs.set(".claude-plugin/marketplace.json", json(claudeMarketplace(config)));
+  outputs.set(".agents/plugins/marketplace.json", json(codexMarketplace(config, published)));
+  outputs.set(".claude-plugin/marketplace.json", json(claudeMarketplace(config, published)));
   return outputs;
 }

@@ -12,8 +12,10 @@
     "check": "node scripts/generate.ts --check && prettier --check .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "check:release": "node scripts/check-release.ts",
     "build:openai-zip": "node scripts/build-openai-zip.ts",
     "validate:hosts": "node scripts/validate-hosts.ts",
+    "release": "node scripts/release.ts",
     "typecheck": "tsc",
     "test": "node --test \"scripts/**/*.test.ts\""
   },

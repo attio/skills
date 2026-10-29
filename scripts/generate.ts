@@ -1,10 +1,11 @@
 // Writes every manifest and marketplace file from plugin.config.ts.
 // With --check, writes nothing and fails if any generated file is out of date.
+import { execFileSync } from "node:child_process";
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { format, resolveConfig } from "prettier";
-import { loadConfig } from "./lib/config.ts";
-import { buildOutputs, mcpFiles, ROOT_README } from "./lib/manifests.ts";
+import { loadConfig, publishedTag, repositoryUrl, type Config } from "./lib/config.ts";
+import { buildOutputs, mcpFiles, ROOT_README, type Published } from "./lib/manifests.ts";
 import { error, report, ROOT, type Diagnostic } from "./lib/report.ts";
 import { loadAgentPluginSchemas } from "./lib/schemas.ts";
 import { loadSkills } from "./lib/skills.ts";
@@ -15,6 +16,42 @@ async function readOptional(path: string): Promise<string | undefined> {
   } catch {
     return undefined;
   }
+}
+
+function git(...args: string[]): string {
+  return execFileSync("git", args, { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+}
+
+/** The commit the published tag points at, from this clone's tags. The tagged plugins must carry that version. */
+function resolvePublished(config: Config): Published | undefined {
+  const tag = publishedTag(config);
+  if (tag === undefined) return undefined;
+  let commit: string;
+  try {
+    commit = git("rev-parse", "--verify", "--quiet", `refs/tags/${tag}^{commit}`);
+  } catch {
+    const upstream = `${repositoryUrl(config)}.git`;
+    console.error(
+      `\`published\` is ${config.published}, but this clone has no tag ${tag}. Run \`git fetch --tags ${upstream}\`.`,
+    );
+    process.exit(1);
+  }
+  for (const plugin of config.plugins) {
+    const path = `plugins/${plugin.name}/.claude-plugin/plugin.json`;
+    let version: unknown;
+    try {
+      version = (JSON.parse(git("show", `${commit}:${path}`)) as { version?: unknown }).version;
+    } catch {
+      version = undefined;
+    }
+    if (version !== config.published) {
+      console.error(
+        `${tag} has ${path} at version ${String(version)}, not ${config.published}. Tag the commit that sets \`version\`.`,
+      );
+      process.exit(1);
+    }
+  }
+  return { tag, commit };
 }
 
 const check = process.argv.includes("--check");
@@ -29,7 +66,7 @@ const readme = await readFile(join(ROOT, ROOT_README), "utf8");
 const diagnostics: Diagnostic[] = [];
 let outputs: Map<string, string>;
 try {
-  outputs = buildOutputs(config, skills, readme);
+  outputs = buildOutputs(config, skills, readme, resolvePublished(config));
 } catch (e) {
   console.error((e as Error).message);
   process.exit(1);

@@ -83,8 +83,13 @@ const plugin = z.strictObject({
 
 const configSchema = z
   .strictObject({
-    /** The version of every plugin. */
+    /** The version on main, shared by every plugin. Releasing it means tagging `v<version>`. */
     version: z.string().regex(SEMVER_PATTERN, "must be MAJOR.MINOR.PATCH"),
+    /**
+     * The released version the marketplaces point at. Set it only after its tag exists. Until the first
+     * release it's unset, and the marketplaces install from the default branch.
+     */
+    published: z.string().regex(SEMVER_PATTERN, "must be MAJOR.MINOR.PATCH").optional(),
     /** GitHub repository that hosts the marketplace, as `owner/name`. */
     repository: z.string().regex(/^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/),
     author: z.strictObject({ name: z.string().min(1), url: httpsUrl }),
@@ -104,6 +109,9 @@ const configSchema = z
     plugins: z.array(plugin).min(1),
   })
   .superRefine((config, ctx) => {
+    if (config.published !== undefined && compareVersions(config.published, config.version) > 0) {
+      ctx.addIssue({ code: "custom", path: ["published"], message: "can't be later than `version`" });
+    }
     const seen = new Set<string>();
     config.plugins.forEach((p, i) => {
       if (seen.has(p.name)) {
@@ -119,6 +127,15 @@ const configSchema = z
       }
     });
   });
+
+export function compareVersions(a: string, b: string): number {
+  const [x, y] = [a, b].map((v) => v.split(".").map(Number));
+  for (let i = 0; i < 3; i++) {
+    const diff = (x?.[i] ?? 0) - (y?.[i] ?? 0);
+    if (diff !== 0) return diff;
+  }
+  return 0;
+}
 
 export type ConfigInput = z.input<typeof configSchema>;
 export type Config = z.output<typeof configSchema>;
@@ -140,6 +157,14 @@ export function parseConfig(input: unknown): Config {
 export async function loadConfig(root: string): Promise<Config> {
   const mod = (await import(pathToFileURL(join(root, "plugin.config.ts")).href)) as { default: unknown };
   return parseConfig(mod.default);
+}
+
+export function releaseTag(config: Config): string {
+  return `v${config.version}`;
+}
+
+export function publishedTag(config: Config): string | undefined {
+  return config.published === undefined ? undefined : `v${config.published}`;
 }
 
 export function repositoryUrl(config: Config): string {
