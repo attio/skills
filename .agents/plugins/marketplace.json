@@ -1,0 +1,42 @@
+{
+  "name": "attio",
+  "interface": {
+    "displayName": "Attio"
+  },
+  "plugins": [
+    {
+      "name": "attio",
+      "description": "Build pipeline, advance deals, and grow accounts.",
+      "interface": {
+        "displayName": "Attio"
+      },
+      "category": "Business & Operations",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/attio/skills.git",
+        "path": "plugins/attio"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      }
+    },
+    {
+      "name": "attio-dev",
+      "description": "Build and review Attio apps with the App SDK, REST API and MCP.",
+      "interface": {
+        "displayName": "Attio for developers"
+      },
+      "category": "Developer Tools",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/attio/skills.git",
+        "path": "plugins/attio-dev"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      }
+    }
+  ]
+}

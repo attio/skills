@@ -1,0 +1,72 @@
+{
+  "name": "attio",
+  "owner": {
+    "name": "Attio",
+    "url": "https://attio.com"
+  },
+  "description": "Attio plugins for Claude.",
+  "plugins": [
+    {
+      "name": "attio",
+      "displayName": "Attio",
+      "description": "Build pipeline, advance deals, and grow accounts.",
+      "author": {
+        "name": "Attio",
+        "url": "https://attio.com"
+      },
+      "homepage": "https://attio.com",
+      "repository": "https://github.com/attio/skills",
+      "category": "sales",
+      "keywords": [
+        "attio",
+        "crm",
+        "sales",
+        "pipeline",
+        "deals",
+        "accounts",
+        "meetings",
+        "email",
+        "revops",
+        "customer-success"
+      ],
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/attio/skills.git",
+        "path": "plugins/attio"
+      }
+    },
+    {
+      "name": "attio-dev",
+      "displayName": "Attio for developers",
+      "description": "Build and review Attio apps with the App SDK, REST API and MCP.",
+      "author": {
+        "name": "Attio",
+        "url": "https://attio.com"
+      },
+      "homepage": "https://attio.com",
+      "repository": "https://github.com/attio/skills",
+      "category": "development",
+      "keywords": [
+        "attio",
+        "crm",
+        "sales",
+        "pipeline",
+        "deals",
+        "accounts",
+        "meetings",
+        "email",
+        "revops",
+        "customer-success",
+        "app-sdk",
+        "rest-api",
+        "mcp",
+        "developer-tools"
+      ],
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/attio/skills.git",
+        "path": "plugins/attio-dev"
+      }
+    }
+  ]
+}
