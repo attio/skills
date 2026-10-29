@@ -6,23 +6,6 @@ import { z } from "zod";
 export const NAME_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const SEMVER_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
 
-/** Listing categories accepted by the OpenAI plugin directory. */
-export const OPENAI_CATEGORIES = [
-  "Productivity",
-  "Creativity",
-  "Developer Tools",
-  "Business & Operations",
-  "Data & Analytics",
-  "Communication",
-  "Education & Research",
-  "Security",
-  "Finance",
-  "Healthcare",
-  "Travel",
-  "Entertainment",
-  "Other",
-] as const;
-
 const name = z.string().max(64).regex(NAME_PATTERN, "use lowercase letters, digits and single hyphens");
 const httpsUrl = z.url({ protocol: /^https$/, error: "must be an https:// URL" });
 const assetPath = z
@@ -70,7 +53,11 @@ const plugin = z.strictObject({
   displayName: z.string().min(1).max(30),
   description: z.string().min(1).max(1024),
   keywords: z.array(z.string().min(1)).default([]),
-  category: z.enum(OPENAI_CATEGORIES),
+  /**
+   * Listing category, such as "Productivity".
+   * @see https://developers.openai.com/plugins/deploy/submission-errors for the categories OpenAI accepts.
+   */
+  category: z.string().min(1),
   /** Remote MCP servers the plugin connects to. Hosts handle sign-in. */
   mcpServers: z.record(name, z.strictObject({ url: httpsUrl })).default({}),
   /** Listed plugins get an OpenAI upload ZIP and are submitted to the plugin directories. */
