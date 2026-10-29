@@ -29,7 +29,7 @@ export interface Skill {
   parsed: ParsedSkillFile;
 }
 
-export function skillsDir(root: string, plugin: string): string {
+function skillsDir(root: string, plugin: string): string {
   return join(root, "plugins", plugin, "skills");
 }
 

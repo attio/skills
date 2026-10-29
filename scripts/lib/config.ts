@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { z } from "zod";
 
 /** Plugin, marketplace and skill names: lowercase letters, digits and single hyphens. */
-export const NAME_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+const NAME_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const SEMVER_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
 
 const name = z.string().max(64).regex(NAME_PATTERN, "use lowercase letters, digits and single hyphens");
@@ -62,7 +62,10 @@ const plugin = z.strictObject({
    * @see https://developers.openai.com/plugins/deploy/submission-errors for the categories OpenAI accepts.
    */
   category: z.string().min(1),
-  /** Claude Code marketplace category, which is free-form. Defaults to `category`. */
+  /**
+   * Claude Code marketplace category, which is free-form. Defaults to `category` in lowercase with hyphens, or
+   * `development` for Developer Tools.
+   */
   claudeCategory: z.string().regex(/^[a-z]+(-[a-z]+)*$/, "use lowercase words and hyphens").optional(),
   /** Remote MCP servers the plugin connects to. Hosts handle sign-in. */
   mcpServers: z.record(name, z.strictObject({ url: httpsUrl })).default({}),
@@ -78,7 +81,7 @@ const plugin = z.strictObject({
   openai,
 });
 
-export const configSchema = z
+const configSchema = z
   .strictObject({
     /** The version of every plugin. */
     version: z.string().regex(SEMVER_PATTERN, "must be MAJOR.MINOR.PATCH"),

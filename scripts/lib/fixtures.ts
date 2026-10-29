@@ -37,8 +37,8 @@ export function testConfig(overrides: Partial<ConfigInput> = {}): Config {
   });
 }
 
-export function skillFile(name: string, extra = "", body = "# Skill\n\nDo the thing.\n"): string {
-  return `---\nname: ${name}\ndescription: Does the thing. Use when the user asks for the thing.\n${extra}---\n\n${body}`;
+export function skillFile(name: string): string {
+  return `---\nname: ${name}\ndescription: Does the thing. Use when the user asks for the thing.\n---\n\n# Skill\n\nDo the thing.\n`;
 }
 
 const roots: string[] = [];
