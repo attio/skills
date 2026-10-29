@@ -26,6 +26,10 @@ const negativeTestCase = z.strictObject({
   prompt: z.string().min(1),
 });
 
+/**
+ * OpenAI listing fields, written to `extensions["com.openai"]`.
+ * @see https://developers.openai.com/plugins/deploy/submission#prepare-metadata-in-pluginjson for the requirements.
+ */
 const openai = z.strictObject({
   /** Directory listing subtitle. */
   shortDescription: z.string().min(1).max(30),
