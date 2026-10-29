@@ -2,6 +2,8 @@
 // After changing it, run `pnpm generate` and commit the result.
 import { defineConfig } from "./scripts/lib/config.ts";
 
+const keywords = ["attio", "crm", "sales", "pipeline", "deals", "accounts", "meetings", "email", "revops", "customer-success"];
+
 export default defineConfig({
   version: "0.0.0",
   repository: "attio/skills",
@@ -16,22 +18,23 @@ export default defineConfig({
   marketplace: {
     name: "attio",
     displayName: "Attio",
-    description: "Attio plugins for Claude, Claude Code, ChatGPT and Codex.",
+    description: "Attio plugins for Claude.",
   },
   plugins: [
     {
       name: "attio",
       displayName: "Attio",
-      description: "Run your sales day in Attio: prep meetings, update deals, review pipeline.",
-      keywords: ["attio", "crm", "sales"],
-      category: "Productivity",
+      description: "Build pipeline, advance deals, and grow accounts.",
+      keywords,
+      category: "Business & Operations",
+      claudeCategory: "sales",
       mcpServers: { attio: { url: "https://mcp.attio.com/mcp" } },
       listed: true,
       icon: "./assets/icon.png",
       openai: {
-        shortDescription: "Run your sales day in Attio",
+        shortDescription: "Build pipeline, grow accounts",
         longDescription:
-          "Connect your Attio workspace to search, create and update records, prepare for meetings and review your pipeline.",
+          "Connect your Attio workspace to build pipeline, advance deals and grow accounts. Search, create and update records, and prepare for meetings.",
         logo: "./assets/icon.png",
         composerIcon: "./assets/icon.png",
         onboardingSkill: "onboarding",
@@ -40,8 +43,8 @@ export default defineConfig({
     {
       name: "attio-dev",
       displayName: "Attio for developers",
-      description: "Build and review Attio apps with the App SDK.",
-      keywords: ["attio", "app-sdk", "developer-tools"],
+      description: "Build and review Attio apps with the App SDK, REST API and MCP.",
+      keywords: [...keywords, "app-sdk", "rest-api", "mcp", "developer-tools"],
       category: "Developer Tools",
       listed: false,
       termsOfService: "https://attio.com/legal/attio-developer-terms",

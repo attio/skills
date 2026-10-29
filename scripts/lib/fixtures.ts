@@ -17,7 +17,8 @@ export function testConfig(overrides: Partial<ConfigInput> = {}): Config {
         name: "crm",
         displayName: "CRM",
         description: "Work with the CRM.",
-        category: "Productivity",
+        category: "Business & Operations",
+        claudeCategory: "sales",
         mcpServers: { crm: { url: "https://mcp.example.com/mcp" } },
         listed: true,
         openai: { shortDescription: "Work with the CRM", longDescription: "Work with the CRM.", onboardingSkill: "setup" },
@@ -35,18 +36,6 @@ export function testConfig(overrides: Partial<ConfigInput> = {}): Config {
     ...overrides,
   });
 }
-
-export const README = `# Plugin
-
-This plugin exists for tests and needs enough words in its README to pass the lint, which asks for at least
-forty words outside code blocks, so this sentence keeps going for a while longer than it otherwise would.
-
-<!-- BEGIN GENERATED: skills -->
-<!-- END GENERATED: skills -->
-
-<!-- BEGIN GENERATED: install -->
-<!-- END GENERATED: install -->
-`;
 
 export function skillFile(name: string, extra = "", body = "# Skill\n\nDo the thing.\n"): string {
   return `---\nname: ${name}\ndescription: Does the thing. Use when the user asks for the thing.\n${extra}---\n\n${body}`;
@@ -68,13 +57,11 @@ export async function fixtureRepo(files: Record<string, string>): Promise<string
   return root;
 }
 
-/** A valid repo for `testConfig()`: READMEs and one skill per plugin. */
+/** A valid repo for `testConfig()`: a README and one skill per plugin. */
 export function baseFiles(): Record<string, string> {
   return {
-    "README.md": "# Plugins\n\n<!-- BEGIN GENERATED: plugins -->\n<!-- END GENERATED: plugins -->\n\n<!-- BEGIN GENERATED: install -->\n<!-- END GENERATED: install -->\n",
-    "plugins/crm/README.md": README,
+    "README.md": "# Plugins\n\n<!-- BEGIN GENERATED: plugins -->\n<!-- END GENERATED: plugins -->\n\n<!-- BEGIN GENERATED: skills -->\n<!-- END GENERATED: skills -->\n\n<!-- BEGIN GENERATED: install -->\n<!-- END GENERATED: install -->\n",
     "plugins/crm/skills/setup/SKILL.md": skillFile("setup"),
-    "plugins/crm-dev/README.md": README,
     "plugins/crm-dev/skills/build-apps/SKILL.md": skillFile("build-apps"),
   };
 }

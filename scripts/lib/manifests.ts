@@ -23,10 +23,6 @@ export function mcpFiles(plugin: PluginConfig): string[] {
 
 export const ROOT_README = "README.md";
 
-export function pluginReadme(plugin: PluginConfig): string {
-  return `plugins/${plugin.name}/README.md`;
-}
-
 function hasMcp(plugin: PluginConfig): boolean {
   return Object.keys(plugin.mcpServers).length > 0;
 }
@@ -37,6 +33,7 @@ function json(value: unknown): string {
 
 /** Claude plugin categories are free-form; use lowercase names that match the Claude directory. */
 function claudeCategory(plugin: PluginConfig): string {
+  if (plugin.claudeCategory !== undefined) return plugin.claudeCategory;
   return plugin.category === "Developer Tools" ? "development" : plugin.category.toLowerCase().replace(/\W+/g, "-");
 }
 
@@ -184,9 +181,9 @@ function skillsTable(skills: readonly Skill[]): string {
   const rows = skills.map((skill) => {
     const description = skill.parsed.data?.["description"];
     const text = typeof description === "string" ? summary(description) : "";
-    return `| [\`${skill.name}\`](skills/${skill.name}/SKILL.md) | ${escapeCell(text)} |`;
+    return `| \`${skill.plugin}\` | [\`${skill.name}\`](plugins/${skill.plugin}/skills/${skill.name}/SKILL.md) | ${escapeCell(text)} |`;
   });
-  return ["| Skill | Description |", "| --- | --- |", ...rows].join("\n");
+  return ["| Plugin | Skill | Description |", "| --- | --- | --- |", ...rows].join("\n");
 }
 
 function pluginsTable(config: Config): string {
@@ -196,12 +193,12 @@ function pluginsTable(config: Config): string {
   return ["| Plugin | Description |", "| --- | --- |", ...rows].join("\n");
 }
 
-function installBlock(config: Config, plugins: readonly PluginConfig[]): string {
+function installBlock(config: Config): string {
   const marketplace = config.marketplace.name;
-  const claude = plugins.map((p) => `/plugin install ${p.name} --marketplace ${config.repository}`);
+  const claude = config.plugins.map((p) => `/plugin install ${p.name} --marketplace ${config.repository}`);
   const codex = [
     `codex plugin marketplace add ${config.repository}`,
-    ...plugins.map((p) => `codex plugin add ${p.name}@${marketplace}`),
+    ...config.plugins.map((p) => `codex plugin add ${p.name}@${marketplace}`),
   ];
   return [
     "In Claude Code:",
@@ -235,13 +232,13 @@ export function renderSections(current: string, sections: Record<string, string>
 }
 
 /**
- * Every generated file, keyed by repo-relative path. `readmes` holds the current README text,
- * because only the marked sections of each README are generated.
+ * Every generated file, keyed by repo-relative path. `readme` is the current README text, because only its
+ * marked sections are generated.
  */
 export function buildOutputs(
   config: Config,
   skills: readonly Skill[],
-  readmes: ReadonlyMap<string, string>,
+  readme: string,
 ): Map<string, string> {
   const outputs = new Map<string, string>();
   for (const plugin of config.plugins) {
@@ -252,21 +249,9 @@ export function buildOutputs(
       outputs.set(`${dir}/mcp.json`, json(openaiMcpConfig(plugin)));
       outputs.set(`${dir}/.mcp.json`, json(claudeMcpConfig(plugin)));
     }
-    const readmePath = pluginReadme(plugin);
-    const readme = readmes.get(readmePath);
-    if (readme === undefined) throw new Error(`${readmePath} is missing`);
-    const sections = {
-      skills: skillsTable(skills.filter((s) => s.plugin === plugin.name)),
-      install: installBlock(config, [plugin]),
-    };
-    outputs.set(readmePath, renderSections(readme, sections, readmePath));
   }
-  const rootReadme = readmes.get(ROOT_README);
-  if (rootReadme === undefined) throw new Error(`${ROOT_README} is missing`);
-  outputs.set(
-    ROOT_README,
-    renderSections(rootReadme, { plugins: pluginsTable(config), install: installBlock(config, config.plugins) }, ROOT_README),
-  );
+  const sections = { plugins: pluginsTable(config), skills: skillsTable(skills), install: installBlock(config) };
+  outputs.set(ROOT_README, renderSections(readme, sections, ROOT_README));
   outputs.set(".agents/plugins/marketplace.json", json(codexMarketplace(config)));
   outputs.set(".claude-plugin/marketplace.json", json(claudeMarketplace(config)));
   return outputs;

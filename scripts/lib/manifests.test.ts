@@ -9,8 +9,7 @@ async function outputs() {
   const root = await fixtureRepo(files);
   const config = testConfig();
   const skills = await loadSkills(root, ["crm", "crm-dev"]);
-  const readmes = new Map(Object.entries(files).filter(([path]) => path.endsWith("README.md")));
-  return buildOutputs(config, skills, readmes);
+  return buildOutputs(config, skills, files["README.md"] ?? "");
 }
 
 const read = (out: Map<string, string>, path: string) => JSON.parse(out.get(path) ?? "null") as Record<string, any>;
@@ -44,10 +43,15 @@ describe("buildOutputs", () => {
     assert.equal(read(await outputs(), "plugins/crm-dev/.claude-plugin/plugin.json")["termsOfServiceUrl"], "https://example.com/developer-terms");
   });
 
+  it("lists each plugin under its Claude category", async () => {
+    const entries = read(await outputs(), ".claude-plugin/marketplace.json")["plugins"];
+    assert.deepEqual(entries.map((e: { category: string }) => e.category), ["sales", "development"]);
+  });
+
   it("fills the README sections", async () => {
-    const readme = (await outputs()).get("plugins/crm/README.md") ?? "";
-    assert.match(readme, /\| \[`setup`\]\(skills\/setup\/SKILL\.md\) \| Does the thing\. \|/);
-    assert.match(readme, /\/plugin install crm --marketplace example\/plugins/);
+    const readme = (await outputs()).get("README.md") ?? "";
+    assert.match(readme, /\| `crm` \| \[`setup`\]\(plugins\/crm\/skills\/setup\/SKILL\.md\) \| Does the thing\. \|/);
+    assert.match(readme, /\/plugin install crm-dev --marketplace example\/plugins/);
     assert.match(readme, /codex plugin add crm@example/);
   });
 });

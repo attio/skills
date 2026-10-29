@@ -3,7 +3,7 @@
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { loadConfig } from "./lib/config.ts";
-import { buildOutputs, mcpFiles, pluginReadme, ROOT_README } from "./lib/manifests.ts";
+import { buildOutputs, mcpFiles, ROOT_README } from "./lib/manifests.ts";
 import { error, report, ROOT, type Diagnostic } from "./lib/report.ts";
 import { loadAgentPluginSchemas } from "./lib/schemas.ts";
 import { loadSkills } from "./lib/skills.ts";
@@ -23,16 +23,12 @@ const skills = await loadSkills(
   config.plugins.map((p) => p.name),
 );
 
-const readmes = new Map<string, string>();
-for (const path of [ROOT_README, ...config.plugins.map(pluginReadme)]) {
-  const text = await readOptional(path);
-  if (text !== undefined) readmes.set(path, text);
-}
+const readme = await readFile(join(ROOT, ROOT_README), "utf8");
 
 const diagnostics: Diagnostic[] = [];
 let outputs: Map<string, string>;
 try {
-  outputs = buildOutputs(config, skills, readmes);
+  outputs = buildOutputs(config, skills, readme);
 } catch (e) {
   console.error((e as Error).message);
   process.exit(1);

@@ -58,6 +58,8 @@ const plugin = z.strictObject({
    * @see https://developers.openai.com/plugins/deploy/submission-errors for the categories OpenAI accepts.
    */
   category: z.string().min(1),
+  /** Claude Code marketplace category, which is free-form. Defaults to `category`. */
+  claudeCategory: z.string().regex(/^[a-z]+(-[a-z]+)*$/, "use lowercase words and hyphens").optional(),
   /** Remote MCP servers the plugin connects to. Hosts handle sign-in. */
   mcpServers: z.record(name, z.strictObject({ url: httpsUrl })).default({}),
   /** Listed plugins get an OpenAI upload ZIP and are submitted to the plugin directories. */
