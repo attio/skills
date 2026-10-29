@@ -2,7 +2,7 @@
   "name": "attio",
   "displayName": "Attio",
   "version": "0.0.0",
-  "description": "Run your sales day in Attio: prep meetings, update deals, review pipeline.",
+  "description": "Build pipeline, advance deals, and grow accounts.",
   "author": {
     "name": "Attio",
     "url": "https://attio.com"
@@ -12,7 +12,14 @@
   "keywords": [
     "attio",
     "crm",
-    "sales"
+    "sales",
+    "pipeline",
+    "deals",
+    "accounts",
+    "meetings",
+    "email",
+    "revops",
+    "customer-success"
   ],
   "documentationUrl": "https://docs.attio.com",
   "supportUrl": "https://attio.com/help",

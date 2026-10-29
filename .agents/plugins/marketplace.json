@@ -6,11 +6,11 @@
   "plugins": [
     {
       "name": "attio",
-      "description": "Run your sales day in Attio: prep meetings, update deals, review pipeline.",
+      "description": "Build pipeline, advance deals, and grow accounts.",
       "interface": {
         "displayName": "Attio"
       },
-      "category": "Productivity",
+      "category": "Business & Operations",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/attio/skills.git",
@@ -23,7 +23,7 @@
     },
     {
       "name": "attio-dev",
-      "description": "Build and review Attio apps with the App SDK.",
+      "description": "Build and review Attio apps with the App SDK, REST API and MCP.",
       "interface": {
         "displayName": "Attio for developers"
       },

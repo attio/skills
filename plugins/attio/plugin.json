@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "attio",
   "version": "0.0.0",
-  "description": "Run your sales day in Attio: prep meetings, update deals, review pipeline.",
+  "description": "Build pipeline, advance deals, and grow accounts.",
   "author": {
     "name": "Attio",
     "url": "https://attio.com"
@@ -12,16 +12,23 @@
   "keywords": [
     "attio",
     "crm",
-    "sales"
+    "sales",
+    "pipeline",
+    "deals",
+    "accounts",
+    "meetings",
+    "email",
+    "revops",
+    "customer-success"
   ],
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Attio",
-        "shortDescription": "Run your sales day in Attio",
-        "longDescription": "Connect your Attio workspace to search, create and update records, prepare for meetings and review your pipeline.",
+        "shortDescription": "Build pipeline, grow accounts",
+        "longDescription": "Connect your Attio workspace to build pipeline, advance deals and grow accounts. Search, create and update records, and prepare for meetings.",
         "developerName": "Attio",
-        "category": "Productivity",
+        "category": "Business & Operations",
         "capabilities": [],
         "websiteURL": "https://attio.com",
         "supportURL": "https://attio.com/help",

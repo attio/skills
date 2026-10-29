@@ -2,7 +2,7 @@
   "name": "attio-dev",
   "displayName": "Attio for developers",
   "version": "0.0.0",
-  "description": "Build and review Attio apps with the App SDK.",
+  "description": "Build and review Attio apps with the App SDK, REST API and MCP.",
   "author": {
     "name": "Attio",
     "url": "https://attio.com"
@@ -11,7 +11,18 @@
   "repository": "https://github.com/attio/skills",
   "keywords": [
     "attio",
+    "crm",
+    "sales",
+    "pipeline",
+    "deals",
+    "accounts",
+    "meetings",
+    "email",
+    "revops",
+    "customer-success",
     "app-sdk",
+    "rest-api",
+    "mcp",
     "developer-tools"
   ],
   "documentationUrl": "https://docs.attio.com",

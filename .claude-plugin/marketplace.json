@@ -4,23 +4,30 @@
     "name": "Attio",
     "url": "https://attio.com"
   },
-  "description": "Attio plugins for Claude, Claude Code, ChatGPT and Codex.",
+  "description": "Attio plugins for Claude.",
   "plugins": [
     {
       "name": "attio",
       "displayName": "Attio",
-      "description": "Run your sales day in Attio: prep meetings, update deals, review pipeline.",
+      "description": "Build pipeline, advance deals, and grow accounts.",
       "author": {
         "name": "Attio",
         "url": "https://attio.com"
       },
       "homepage": "https://attio.com",
       "repository": "https://github.com/attio/skills",
-      "category": "productivity",
+      "category": "sales",
       "keywords": [
         "attio",
         "crm",
-        "sales"
+        "sales",
+        "pipeline",
+        "deals",
+        "accounts",
+        "meetings",
+        "email",
+        "revops",
+        "customer-success"
       ],
       "source": {
         "source": "git-subdir",
@@ -31,7 +38,7 @@
     {
       "name": "attio-dev",
       "displayName": "Attio for developers",
-      "description": "Build and review Attio apps with the App SDK.",
+      "description": "Build and review Attio apps with the App SDK, REST API and MCP.",
       "author": {
         "name": "Attio",
         "url": "https://attio.com"
@@ -41,7 +48,18 @@
       "category": "development",
       "keywords": [
         "attio",
+        "crm",
+        "sales",
+        "pipeline",
+        "deals",
+        "accounts",
+        "meetings",
+        "email",
+        "revops",
+        "customer-success",
         "app-sdk",
+        "rest-api",
+        "mcp",
         "developer-tools"
       ],
       "source": {
