@@ -4,10 +4,17 @@ The Attio for developers plugin helps coding agents build on [Attio](https://att
 
 The plugin only adds skills. It doesn't connect to your Attio workspace or to any other service.
 
-## Skills
-
-The plugin's skills are in [`skills/`](skills).
-
 ## Install
 
-See the [main README](../../README.md#install).
+In Claude Code:
+
+```
+/plugin install attio-dev --marketplace attio/skills
+```
+
+In Codex:
+
+```
+codex plugin marketplace add attio/skills
+codex plugin add attio-dev@attio
+```
