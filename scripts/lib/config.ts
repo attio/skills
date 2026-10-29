@@ -7,9 +7,7 @@ const SEMVER_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
 
 const name = z.string().max(64).regex(NAME_PATTERN, "use lowercase letters, digits and single hyphens");
 const httpsUrl = z.url({ protocol: /^https$/, error: "must be an https:// URL" });
-const assetPath = z
-  .string()
-  .regex(/^\.\/assets\/[^/]+$/, "must be a file directly under ./assets/");
+const assetPath = z.string().regex(/^\.\/assets\/[^/]+$/, "must be a file directly under ./assets/");
 const hexColor = z.string().regex(/^#[0-9A-Fa-f]{6}$/, "must be #RRGGBB");
 
 const positiveTestCase = z.strictObject({
@@ -65,7 +63,10 @@ const plugin = z.strictObject({
    * Claude Code marketplace category, which is free-form. Defaults to `category` in lowercase with hyphens, or
    * `development` for Developer Tools.
    */
-  claudeCategory: z.string().regex(/^[a-z]+(-[a-z]+)*$/, "use lowercase words and hyphens").optional(),
+  claudeCategory: z
+    .string()
+    .regex(/^[a-z]+(-[a-z]+)*$/, "use lowercase words and hyphens")
+    .optional(),
   /** Remote MCP servers the plugin connects to. Hosts handle sign-in. */
   mcpServers: z.record(name, z.strictObject({ url: httpsUrl })).default({}),
   /** Listed plugins get an OpenAI upload ZIP. */

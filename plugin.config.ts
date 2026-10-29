@@ -2,7 +2,18 @@
 // After changing it, run `pnpm generate` and commit the result.
 import { defineConfig } from "./scripts/lib/config.ts";
 
-const keywords = ["attio", "crm", "sales", "pipeline", "deals", "accounts", "meetings", "email", "revops", "customer-success"];
+const keywords = [
+  "attio",
+  "crm",
+  "sales",
+  "pipeline",
+  "deals",
+  "accounts",
+  "meetings",
+  "email",
+  "revops",
+  "customer-success",
+];
 
 export default defineConfig({
   version: "0.1.0",
