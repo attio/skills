@@ -38,7 +38,13 @@ function requireCleanMain(): void {
 }
 
 /** Edits plugin.config.ts on a new branch, regenerates, and opens a pull request. */
-function openPullRequest(branch: string, field: "version" | "published", value: string, title: string, body: string): void {
+function openPullRequest(
+  branch: string,
+  field: "version" | "published",
+  value: string,
+  title: string,
+  body: string,
+): void {
   run("git", ["switch", "--quiet", "-c", branch]);
   writeFileSync(CONFIG_FILE, setReleaseField(readFileSync(CONFIG_FILE, "utf8"), field, value));
   run(process.execPath, [join(ROOT, "scripts", "generate.ts")]);
@@ -74,12 +80,24 @@ if (command === "bump") {
   run("git", ["tag", "--annotate", tag, "--message", tag]);
   run("git", ["push", "--quiet", "origin", tag]);
   console.log(`Pushed ${tag}. The Release workflow is building it: ${repositoryUrl(config)}/actions`);
-  console.log("Next: QA the build (`pnpm validate:hosts`, and upload the ZIP as an OpenAI draft), then run `pnpm release publish`.");
+  console.log(
+    "Next: QA the build (`pnpm validate:hosts`, and upload the ZIP as an OpenAI draft), then run `pnpm release publish`.",
+  );
 } else if (command === "publish") {
   requireCleanMain();
   if (!unreleased) fail(`Nothing to publish: run \`pnpm release bump X.Y.Z\` first.`);
   if (!tagExists(tag)) fail(`${tag} doesn't exist yet. Run \`pnpm release tag\` first.`);
-  const assets = run("gh", ["release", "view", tag, "--repo", config.repository, "--json", "assets", "--jq", ".assets[].name"]);
+  const assets = run("gh", [
+    "release",
+    "view",
+    tag,
+    "--repo",
+    config.repository,
+    "--json",
+    "assets",
+    "--jq",
+    ".assets[].name",
+  ]);
   for (const plugin of config.plugins.filter((p) => p.listed)) {
     const zip = `${plugin.name}-${config.version}.zip`;
     if (!assets.split("\n").includes(zip)) fail(`The ${tag} release has no ${zip}. Check the Release workflow.`);
