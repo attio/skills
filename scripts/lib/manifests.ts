@@ -128,7 +128,7 @@ function codexMarketplace(config: Config) {
     interface: { displayName: config.marketplace.displayName },
     plugins: config.plugins.map((plugin) => ({
       name: plugin.name,
-      // Codex only reads the plugin's own manifest after install, so the browser shows these fields.
+      // Codex needs these fields to display the listing before the plugin is installed.
       description: plugin.description,
       interface: { displayName: plugin.displayName },
       category: plugin.category,
@@ -148,7 +148,7 @@ function claudeMarketplace(config: Config) {
     description: config.marketplace.description,
     plugins: config.plugins.map((plugin) => ({
       name: plugin.name,
-      // Claude Code only reads plugin.json for relative sources, so the listing shows these fields.
+      // Claude Code reads plugin.json for relative sources; Git sources need these fields in the listing.
       displayName: plugin.displayName,
       description: plugin.description,
       author: config.author,
@@ -169,7 +169,7 @@ function escapeCell(text: string): string {
 function skillsTable(skills: readonly Skill[]): string {
   if (skills.length === 0) return "No skills yet.";
   const rows = skills.map((skill) => {
-    const description = skill.parsed.data?.["description"];
+    const description = skill.frontmatter?.["description"];
     const text = typeof description === "string" ? summary(description) : "";
     return `| \`${skill.plugin}\` | [\`${skill.name}\`](plugins/${skill.plugin}/skills/${skill.name}/SKILL.md) | ${escapeCell(text)} |`;
   });
@@ -177,9 +177,7 @@ function skillsTable(skills: readonly Skill[]): string {
 }
 
 function pluginsTable(config: Config): string {
-  const rows = config.plugins.map(
-    (p) => `| [\`${p.name}\`](plugins/${p.name}) | ${escapeCell(p.description)} |`,
-  );
+  const rows = config.plugins.map((p) => `| [\`${p.name}\`](plugins/${p.name}) | ${escapeCell(p.description)} |`);
   return ["| Plugin | Description |", "| --- | --- |", ...rows].join("\n");
 }
 
@@ -190,19 +188,7 @@ function installBlock(config: Config): string {
     `codex plugin marketplace add ${config.repository}`,
     ...config.plugins.map((p) => `codex plugin add ${p.name}@${marketplace}`),
   ];
-  return [
-    "In Claude Code:",
-    "",
-    "```",
-    ...claude,
-    "```",
-    "",
-    "In Codex:",
-    "",
-    "```",
-    ...codex,
-    "```",
-  ].join("\n");
+  return ["In Claude Code:", "", "```", ...claude, "```", "", "In Codex:", "", "```", ...codex, "```"].join("\n");
 }
 
 /** Replaces each `<!-- BEGIN GENERATED: name -->` ... `<!-- END GENERATED: name -->` section. */
@@ -225,11 +211,7 @@ export function renderSections(current: string, sections: Record<string, string>
  * Every generated file, keyed by repo-relative path. `readme` is the current README text, because only its
  * marked sections are generated.
  */
-export function buildOutputs(
-  config: Config,
-  skills: readonly Skill[],
-  readme: string,
-): Map<string, string> {
+export function buildOutputs(config: Config, skills: readonly Skill[], readme: string): Map<string, string> {
   const outputs = new Map<string, string>();
   for (const plugin of config.plugins) {
     const dir = `plugins/${plugin.name}`;

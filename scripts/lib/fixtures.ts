@@ -2,10 +2,10 @@ import { rmSync } from "node:fs";
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { parseConfig, type Config, type ConfigInput } from "./config.ts";
+import { parseConfig, type Config } from "./config.ts";
 
 /** A config with one MCP plugin and one plain plugin, for tests. */
-export function testConfig(overrides: Partial<ConfigInput> = {}): Config {
+export function testConfig(): Config {
   return parseConfig({
     version: "1.2.3",
     repository: "example/plugins",
@@ -21,7 +21,11 @@ export function testConfig(overrides: Partial<ConfigInput> = {}): Config {
         claudeCategory: "sales",
         mcpServers: { crm: { url: "https://mcp.example.com/mcp" } },
         listed: true,
-        openai: { shortDescription: "Work with the CRM", longDescription: "Work with the CRM.", onboardingSkill: "setup" },
+        openai: {
+          shortDescription: "Work with the CRM",
+          longDescription: "Work with the CRM.",
+          onboardingSkill: "setup",
+        },
       },
       {
         name: "crm-dev",
@@ -33,7 +37,6 @@ export function testConfig(overrides: Partial<ConfigInput> = {}): Config {
         openai: { shortDescription: "Build CRM apps", longDescription: "Build CRM apps." },
       },
     ],
-    ...overrides,
   });
 }
 
@@ -46,7 +49,7 @@ process.on("exit", () => {
   for (const root of roots) rmSync(root, { recursive: true, force: true });
 });
 
-/** Writes files into a new temporary repo, removed when the test process exits, and returns its root. */
+/** Creates a temporary file tree and removes it when the test process exits. */
 export async function fixtureRepo(files: Record<string, string>): Promise<string> {
   const root = await mkdtemp(join(tmpdir(), "attio-plugins-test-"));
   roots.push(root);
@@ -55,13 +58,4 @@ export async function fixtureRepo(files: Record<string, string>): Promise<string
     await writeFile(join(root, path), content);
   }
   return root;
-}
-
-/** A valid repo for `testConfig()`: a README and one skill per plugin. */
-export function baseFiles(): Record<string, string> {
-  return {
-    "README.md": "# Plugins\n\n<!-- BEGIN GENERATED: plugins -->\n<!-- END GENERATED: plugins -->\n\n<!-- BEGIN GENERATED: skills -->\n<!-- END GENERATED: skills -->\n\n<!-- BEGIN GENERATED: install -->\n<!-- END GENERATED: install -->\n",
-    "plugins/crm/skills/setup/SKILL.md": skillFile("setup"),
-    "plugins/crm-dev/skills/build-apps/SKILL.md": skillFile("build-apps"),
-  };
 }
