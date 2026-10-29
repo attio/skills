@@ -61,8 +61,7 @@ export async function collectUploadFiles(pluginDir: string): Promise<ZipFile[]> 
 /** A byte-for-byte reproducible ZIP: sorted entries and a fixed timestamp. */
 export function buildZip(files: readonly ZipFile[]): Uint8Array {
   // ZIP timestamps are local time; 1980-01-01 is the earliest the format stores.
-  const offsetMs = new Date(1980, 0, 1).getTimezoneOffset() * 60_000;
-  const mtime = new Date(Date.UTC(1980, 0, 1) + offsetMs);
+  const mtime = new Date(1980, 0, 1);
   const zippable: Zippable = {};
   for (const file of [...files].sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))) {
     zippable[file.path] = [file.data, { mtime, level: 9 }];
