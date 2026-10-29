@@ -1,5 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
-import { join, relative } from "node:path";
+import { join } from "node:path";
 import { parseDocument } from "yaml";
 
 export interface ParsedSkillFile {
@@ -26,11 +26,6 @@ function frontmatterEnd(lines: readonly string[]): number {
 export interface Skill {
   plugin: string;
   name: string;
-  /** Absolute path of the skill folder. */
-  dir: string;
-  /** Repo-relative path of SKILL.md. */
-  path: string;
-  text: string;
   parsed: ParsedSkillFile;
 }
 
@@ -51,15 +46,14 @@ export async function loadSkills(root: string, plugins: readonly string[]): Prom
     }
     for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
       if (!entry.isDirectory()) continue;
-      const dir = join(base, entry.name);
-      const file = join(dir, "SKILL.md");
+      const file = join(base, entry.name, "SKILL.md");
       let text;
       try {
         text = await readFile(file, "utf8");
       } catch {
         continue;
       }
-      skills.push({ plugin, name: entry.name, dir, path: relative(root, file), text, parsed: parseSkillFile(text) });
+      skills.push({ plugin, name: entry.name, parsed: parseSkillFile(text) });
     }
   }
   return skills;

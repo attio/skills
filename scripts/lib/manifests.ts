@@ -6,16 +6,6 @@ import { summary } from "./skills.ts";
 export const AGENT_PLUGIN_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json";
 export const AGENT_PLUGIN_MCP_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json";
 
-/** Files the generator owns, relative to the repo root. */
-export const MARKETPLACE_FILES = [".agents/plugins/marketplace.json", ".claude-plugin/marketplace.json"] as const;
-
-export function pluginFiles(plugin: PluginConfig): string[] {
-  const dir = `plugins/${plugin.name}`;
-  const files = [`${dir}/plugin.json`, `${dir}/.claude-plugin/plugin.json`];
-  if (hasMcp(plugin)) files.push(`${dir}/mcp.json`, `${dir}/.mcp.json`);
-  return files;
-}
-
 /** MCP config files the generator removes when a plugin has no MCP server. */
 export function mcpFiles(plugin: PluginConfig): string[] {
   return [`plugins/${plugin.name}/mcp.json`, `plugins/${plugin.name}/.mcp.json`];
