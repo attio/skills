@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { loadConfig } from "./lib/config.ts";
 import { buildOutputs, mcpFiles, pluginReadme, ROOT_README } from "./lib/manifests.ts";
 import { error, report, ROOT, type Diagnostic } from "./lib/report.ts";
-import { agentPluginSchemaErrors } from "./lib/schemas.ts";
+import { loadAgentPluginSchemas } from "./lib/schemas.ts";
 import { loadSkills } from "./lib/skills.ts";
 
 async function readOptional(path: string): Promise<string | undefined> {
@@ -39,6 +39,10 @@ try {
 }
 
 // The OpenAI manifests must match the Agent Plugins schema, or OpenAI clients fall back or drop the MCP server.
+const agentPluginSchemaErrors = await loadAgentPluginSchemas().catch((e: Error) => {
+  console.error(e.message);
+  process.exit(1);
+});
 for (const plugin of config.plugins) {
   for (const kind of ["plugin", "mcp"] as const) {
     const path = `plugins/${plugin.name}/${kind}.json`;

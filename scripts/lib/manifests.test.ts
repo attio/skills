@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { baseFiles, fixtureRepo, testConfig } from "./fixtures.ts";
 import { buildOutputs, renderSections } from "./manifests.ts";
-import { agentPluginSchemaErrors } from "./schemas.ts";
 import { loadSkills } from "./skills.ts";
 
 async function outputs() {
@@ -43,13 +42,6 @@ describe("buildOutputs", () => {
     assert.equal("extensions" in manifest, false);
     assert.equal(manifest["version"], "1.2.3");
     assert.equal(read(await outputs(), "plugins/crm-dev/.claude-plugin/plugin.json")["termsOfServiceUrl"], "https://example.com/developer-terms");
-  });
-
-  it("matches the Agent Plugins schema", async () => {
-    const out = await outputs();
-    assert.deepEqual(agentPluginSchemaErrors("plugin", read(out, "plugins/crm/plugin.json")), []);
-    assert.deepEqual(agentPluginSchemaErrors("plugin", read(out, "plugins/crm-dev/plugin.json")), []);
-    assert.deepEqual(agentPluginSchemaErrors("mcp", read(out, "plugins/crm/mcp.json")), []);
   });
 
   it("fills the README sections", async () => {

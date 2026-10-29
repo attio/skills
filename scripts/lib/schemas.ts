@@ -1,17 +1,27 @@
-import { Ajv2020 } from "ajv/dist/2020.js";
-import pluginSchema from "../schemas/agent-plugins-1.0.0/plugin.schema.json" with { type: "json" };
-import mcpSchema from "../schemas/agent-plugins-1.0.0/mcp.schema.json" with { type: "json" };
+import { Ajv2020, type AnySchema } from "ajv/dist/2020.js";
+import { AGENT_PLUGIN_MCP_SCHEMA, AGENT_PLUGIN_SCHEMA } from "./manifests.ts";
 
-// Copies of https://agent-plugins.org/schemas/1.0.0/{plugin,mcp}.schema.json, the format OpenAI reads.
-const ajv = new Ajv2020({ allErrors: true, strict: false });
-const validators = {
-  plugin: ajv.compile(pluginSchema),
-  mcp: ajv.compile(mcpSchema),
-};
+type SchemaErrors = (kind: "plugin" | "mcp", value: unknown) => string[];
 
-/** Schema errors for a generated Agent Plugins `plugin.json` or `mcp.json`, or an empty list. */
-export function agentPluginSchemaErrors(kind: keyof typeof validators, value: unknown): string[] {
-  const validate = validators[kind];
-  if (validate(value)) return [];
-  return (validate.errors ?? []).map((e) => `${e.instancePath || "/"} ${e.message ?? "is invalid"}`);
+/**
+ * Downloads the Agent Plugins 1.0.0 schemas, the format OpenAI reads, and returns a function that lists the
+ * schema errors for a generated `plugin.json` or `mcp.json`.
+ */
+export async function loadAgentPluginSchemas(): Promise<SchemaErrors> {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  const load = async (url: string) => {
+    try {
+      const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return ajv.compile((await response.json()) as AnySchema);
+    } catch (e) {
+      throw new Error(`Couldn't download ${url}: ${(e as Error).message}`);
+    }
+  };
+  const validators = { plugin: await load(AGENT_PLUGIN_SCHEMA), mcp: await load(AGENT_PLUGIN_MCP_SCHEMA) };
+  return (kind, value) => {
+    const validate = validators[kind];
+    if (validate(value)) return [];
+    return (validate.errors ?? []).map((e) => `${e.instancePath || "/"} ${e.message ?? "is invalid"}`);
+  };
 }

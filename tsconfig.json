@@ -12,7 +12,6 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true
   },
   "include": ["plugin.config.ts", "scripts/**/*.ts"]
