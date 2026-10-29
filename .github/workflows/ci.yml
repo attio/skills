@@ -29,6 +29,8 @@ jobs:
             command: generate --check
           - name: Formatting
             command: format:check
+          - name: Build the OpenAI upload
+            command: build:openai-zip
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

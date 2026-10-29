@@ -59,7 +59,7 @@ asks. The assistant can only see and change what your Attio permissions allow.
 plugins/<plugin>/skills/<skill>/SKILL.md   skills, one folder each
 plugins/<plugin>/README.md                 plugin overview
 plugin.config.ts                           source for every manifest and marketplace file
-scripts/                                   generator and checks
+scripts/                                   generator, checks and the release build
 ```
 
 Each plugin folder also holds manifests for every supported client. They're generated from
