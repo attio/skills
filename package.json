@@ -1,0 +1,30 @@
+{
+  "name": "attio-plugins",
+  "private": true,
+  "description": "Attio plugins for Claude, Claude Code, ChatGPT and Codex",
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "generate": "node scripts/generate.ts",
+    "check": "node scripts/generate.ts --check && node scripts/lint-skills.ts && node scripts/check-mcp-tools.ts",
+    "lint:skills": "node scripts/lint-skills.ts",
+    "check:mcp-tools": "node scripts/check-mcp-tools.ts",
+    "check:release": "node scripts/check-release.ts",
+    "build:zip": "node scripts/build-openai-zip.ts",
+    "validate:hosts": "node scripts/validate-hosts.ts",
+    "release": "node scripts/release.ts",
+    "typecheck": "tsc",
+    "test": "node --test \"scripts/**/*.test.ts\""
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "ajv": "8.20.0",
+    "fflate": "0.8.3",
+    "typescript": "7.0.2",
+    "yaml": "2.9.1",
+    "zod": "4.6.7"
+  }
+}

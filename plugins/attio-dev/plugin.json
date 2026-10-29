@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "attio-dev",
+  "version": "0.0.0",
+  "description": "Build and review Attio apps with the App SDK.",
+  "author": {
+    "name": "Attio",
+    "url": "https://attio.com"
+  },
+  "homepage": "https://attio.com",
+  "repository": "https://github.com/attio/skills",
+  "keywords": [
+    "attio",
+    "app-sdk",
+    "developer-tools"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Attio for developers",
+        "shortDescription": "Build Attio apps",
+        "longDescription": "Build, debug and review Attio apps built with the Attio App SDK.",
+        "developerName": "Attio",
+        "category": "Developer Tools",
+        "capabilities": [],
+        "websiteURL": "https://attio.com",
+        "supportURL": "https://attio.com/help",
+        "privacyPolicyURL": "https://attio.com/legal/privacy",
+        "termsOfServiceURL": "https://attio.com/legal/attio-developer-terms"
+      }
+    }
+  }
+}

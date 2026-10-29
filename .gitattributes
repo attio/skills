@@ -1,0 +1,9 @@
+* text=auto eol=lf
+
+# Generated from plugin.config.ts by `pnpm generate`.
+.agents/plugins/marketplace.json linguist-generated
+.claude-plugin/marketplace.json linguist-generated
+plugins/*/plugin.json linguist-generated
+plugins/*/mcp.json linguist-generated
+plugins/*/.mcp.json linguist-generated
+plugins/*/.claude-plugin/plugin.json linguist-generated

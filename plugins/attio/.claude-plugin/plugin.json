@@ -1,0 +1,22 @@
+{
+  "name": "attio",
+  "displayName": "Attio",
+  "version": "0.0.0",
+  "description": "Run your sales day in Attio: prep meetings, update deals, review pipeline.",
+  "author": {
+    "name": "Attio",
+    "url": "https://attio.com"
+  },
+  "homepage": "https://attio.com",
+  "repository": "https://github.com/attio/skills",
+  "keywords": [
+    "attio",
+    "crm",
+    "sales"
+  ],
+  "documentationUrl": "https://docs.attio.com",
+  "supportUrl": "https://attio.com/help",
+  "privacyPolicyUrl": "https://attio.com/legal/privacy",
+  "termsOfServiceUrl": "https://attio.com/legal/services-agreement",
+  "icon": "./assets/icon.png"
+}

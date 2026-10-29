@@ -1,0 +1,54 @@
+{
+  "name": "attio",
+  "owner": {
+    "name": "Attio",
+    "url": "https://attio.com"
+  },
+  "description": "Attio plugins for Claude, Claude Code, ChatGPT and Codex.",
+  "plugins": [
+    {
+      "name": "attio",
+      "displayName": "Attio",
+      "description": "Run your sales day in Attio: prep meetings, update deals, review pipeline.",
+      "author": {
+        "name": "Attio",
+        "url": "https://attio.com"
+      },
+      "homepage": "https://attio.com",
+      "repository": "https://github.com/attio/skills",
+      "category": "productivity",
+      "keywords": [
+        "attio",
+        "crm",
+        "sales"
+      ],
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/attio/skills.git",
+        "path": "plugins/attio"
+      }
+    },
+    {
+      "name": "attio-dev",
+      "displayName": "Attio for developers",
+      "description": "Build and review Attio apps with the App SDK.",
+      "author": {
+        "name": "Attio",
+        "url": "https://attio.com"
+      },
+      "homepage": "https://attio.com",
+      "repository": "https://github.com/attio/skills",
+      "category": "development",
+      "keywords": [
+        "attio",
+        "app-sdk",
+        "developer-tools"
+      ],
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/attio/skills.git",
+        "path": "plugins/attio-dev"
+      }
+    }
+  ]
+}
