@@ -18,6 +18,14 @@ function frontmatterEnd(lines: readonly string[]): number {
   return lines.findIndex((line, i) => i > 0 && line.trim() === "---");
 }
 
+/** 1-based line in SKILL.md where a top-level frontmatter key is defined, or 1 if it isn't. */
+export function frontmatterKeyLine(text: string, key: string): number {
+  const lines = text.replace(/\r\n?/g, "\n").split("\n");
+  const end = frontmatterEnd(lines);
+  const i = lines.slice(0, end === -1 ? 1 : end).findIndex((line) => line.startsWith(`${key}:`));
+  return i === -1 ? 1 : i + 1;
+}
+
 export interface Skill {
   plugin: string;
   name: string;
@@ -48,6 +56,21 @@ export async function loadSkills(root: string, plugins: readonly string[]): Prom
     }
   }
   return skills;
+}
+
+/** Text of a string-valued `metadata` key, or undefined. */
+export function skillMetadata(skill: Skill, key: string): string | undefined {
+  const metadata = skill.parsed.data?.["metadata"];
+  if (metadata && typeof metadata === "object" && !Array.isArray(metadata)) {
+    const value = (metadata as Record<string, unknown>)[key];
+    return typeof value === "string" ? value : undefined;
+  }
+  return undefined;
+}
+
+/** MCP tools a skill declares in `metadata.mcp-tools`, a space-separated list. */
+export function declaredMcpTools(skill: Skill): string[] {
+  return (skillMetadata(skill, "mcp-tools") ?? "").split(/\s+/).filter(Boolean);
 }
 
 /** First sentence of a skill description, for tables. */

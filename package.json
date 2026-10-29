@@ -9,7 +9,9 @@
   },
   "scripts": {
     "generate": "node scripts/generate.ts",
-    "check": "node scripts/generate.ts --check",
+    "check": "node scripts/generate.ts --check && node scripts/lint-skills.ts && node scripts/check-mcp-tools.ts",
+    "lint:skills": "node scripts/lint-skills.ts",
+    "check:mcp-tools": "node scripts/check-mcp-tools.ts",
     "validate:hosts": "node scripts/validate-hosts.ts",
     "typecheck": "tsc",
     "test": "node --test \"scripts/**/*.test.ts\""
