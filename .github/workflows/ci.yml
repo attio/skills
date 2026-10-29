@@ -63,6 +63,14 @@ jobs:
         run: npm install --global --no-audit --no-fund @anthropic-ai/claude-code@2.1.307 @openai/codex@0.165.0
       - run: pnpm validate:hosts --require
 
+  release:
+    name: Release
+    needs: [checks, hosts]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/release.yml
+
   version:
     name: Version raised
     if: github.event_name == 'pull_request'
