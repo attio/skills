@@ -53,7 +53,6 @@ asks. The assistant can only see and change what your Attio permissions allow.
 plugins/<plugin>/skills/<skill>/SKILL.md   skills, one folder each
 plugins/<plugin>/README.md                 plugin overview
 plugin.config.ts                           source for every manifest and marketplace file
-mcp-tools.json                             tools the Attio MCP server provides
 scripts/                                   generator and checks
 ```
 
