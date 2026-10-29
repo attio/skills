@@ -1,7 +1,7 @@
 {
   "name": "attio-dev",
   "displayName": "Attio for developers",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Build and review Attio apps with the App SDK, REST API and MCP.",
   "author": {
     "name": "Attio",
