@@ -9,7 +9,9 @@
   },
   "scripts": {
     "generate": "node scripts/generate.ts",
-    "check": "node scripts/generate.ts --check",
+    "check": "node scripts/generate.ts --check && prettier --check .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "validate:hosts": "node scripts/validate-hosts.ts",
     "typecheck": "tsc",
     "test": "node --test \"scripts/**/*.test.ts\""
@@ -17,6 +19,7 @@
   "devDependencies": {
     "@types/node": "22.20.5",
     "ajv": "8.20.0",
+    "prettier": "3.9.10",
     "typescript": "7.0.2",
     "yaml": "2.9.1",
     "zod": "4.6.7"

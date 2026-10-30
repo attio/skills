@@ -15,7 +15,9 @@ export const error = (file: string, message: string): Diagnostic => ({ file, mes
 export function report(diagnostics: readonly Diagnostic[], ok: string): number {
   const github = process.env["GITHUB_ACTIONS"] === "true";
   for (const d of [...diagnostics].sort((a, b) => a.file.localeCompare(b.file))) {
-    console.log(github ? `::error file=${d.file}::${d.message.replace(/\n/g, "%0A")}` : `${d.file}: error: ${d.message}`);
+    console.log(
+      github ? `::error file=${d.file}::${d.message.replace(/\n/g, "%0A")}` : `${d.file}: error: ${d.message}`,
+    );
   }
   if (diagnostics.length > 0) {
     console.log(`\n${diagnostics.length} error(s)`);
