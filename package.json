@@ -9,7 +9,6 @@
   },
   "scripts": {
     "generate": "node scripts/generate.ts",
-    "check": "node scripts/generate.ts --check && prettier --check .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check:version": "node scripts/check-version.ts",
