@@ -2,7 +2,6 @@ import { pathToFileURL } from "node:url";
 import { join } from "node:path";
 import { z } from "zod";
 
-/** Plugin, marketplace and skill names: lowercase letters, digits and single hyphens. */
 const NAME_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const SEMVER_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
 
@@ -69,7 +68,7 @@ const plugin = z.strictObject({
   claudeCategory: z.string().regex(/^[a-z]+(-[a-z]+)*$/, "use lowercase words and hyphens").optional(),
   /** Remote MCP servers the plugin connects to. Hosts handle sign-in. */
   mcpServers: z.record(name, z.strictObject({ url: httpsUrl })).default({}),
-  /** Listed plugins get an OpenAI upload ZIP and are submitted to the plugin directories. */
+  /** Listed plugins get an OpenAI upload ZIP. */
   listed: z.boolean(),
   /** Overrides `links.termsOfService` for this plugin. */
   termsOfService: httpsUrl.optional(),

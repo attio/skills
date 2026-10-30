@@ -34,7 +34,7 @@ try {
   process.exit(1);
 }
 
-// The OpenAI manifests must match the Agent Plugins schema, or OpenAI clients fall back or drop the MCP server.
+// Check the OpenAI manifests against the Agent Plugins schema.
 const agentPluginSchemaErrors = await loadAgentPluginSchemas().catch((e: Error) => {
   console.error(e.message);
   process.exit(1);

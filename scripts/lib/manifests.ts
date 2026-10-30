@@ -21,7 +21,6 @@ function json(value: unknown): string {
   return `${JSON.stringify(value, null, 2)}\n`;
 }
 
-/** Claude plugin categories are free-form; use lowercase names that match the Claude directory. */
 function claudeCategory(plugin: PluginConfig): string {
   if (plugin.claudeCategory !== undefined) return plugin.claudeCategory;
   return plugin.category === "Developer Tools" ? "development" : plugin.category.toLowerCase().replace(/\W+/g, "-");
