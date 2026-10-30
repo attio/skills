@@ -51,9 +51,7 @@ function step(name: string, fn: () => void): void {
   }
 }
 
-/**
- * Copies the marketplace and points its entries at local plugins so the checks use this checkout.
- */
+/** Copies the marketplace and points its entries at local plugins so the checks use this checkout. */
 async function localMarketplace(work: string, file: string): Promise<string> {
   const dir = join(work, "marketplace");
   await mkdir(join(dir, file, ".."), { recursive: true });
