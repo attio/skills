@@ -1,5 +1,4 @@
 // Fails when a pull request changes a plugin without raising `version`, compared with a base branch.
-// Claude Code only updates an installed plugin when its version changes.
 // Usage: node scripts/check-version.ts [base], where base defaults to origin/main.
 import { execFileSync } from "node:child_process";
 import { compareVersions, loadConfig } from "./lib/config.ts";
