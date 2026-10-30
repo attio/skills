@@ -83,7 +83,10 @@ const plugin = z.strictObject({
 
 const configSchema = z
   .strictObject({
-    /** The version of every plugin. */
+    /**
+     * The version of every plugin. Raise it in every pull request that changes a plugin: Claude Code only
+     * updates installed plugins when it changes, and merging to main releases it.
+     */
     version: z.string().regex(SEMVER_PATTERN, "must be MAJOR.MINOR.PATCH"),
     /** GitHub repository that hosts the marketplace, as `owner/name`. */
     repository: z.string().regex(/^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/),
@@ -119,6 +122,15 @@ const configSchema = z
       }
     });
   });
+
+export function compareVersions(a: string, b: string): number {
+  const [x, y] = [a, b].map((v) => v.split(".").map(Number));
+  for (let i = 0; i < 3; i++) {
+    const diff = (x?.[i] ?? 0) - (y?.[i] ?? 0);
+    if (diff !== 0) return diff;
+  }
+  return 0;
+}
 
 export type ConfigInput = z.input<typeof configSchema>;
 export type Config = z.output<typeof configSchema>;
