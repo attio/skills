@@ -10,6 +10,7 @@
   "scripts": {
     "generate": "node scripts/generate.ts",
     "check": "node scripts/generate.ts --check",
+    "validate:hosts": "node scripts/validate-hosts.ts",
     "typecheck": "tsc",
     "test": "node --test \"scripts/**/*.test.ts\""
   },
